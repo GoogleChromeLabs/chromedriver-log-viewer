@@ -154,8 +154,19 @@ describe('LogParser', () => {
       expect(cmd?.commandId).toBe(1);
       expect(res?.commandId).toBe(1);
 
-      // Check timestamps (mocked)
-      expect(cmd?.timestamp).toBe('[01-20-1970 08:13:20.123]');
+      // Check timestamps (dynamically to support any timezone)
+      const date = new Date(1700000.123 * 1000);
+      const pad = (n: number, width = 2) => n.toString().padStart(width, '0');
+      const month = pad(date.getMonth() + 1);
+      const day = pad(date.getDate());
+      const year = date.getFullYear();
+      const hours = pad(date.getHours());
+      const minutes = pad(date.getMinutes());
+      const seconds = pad(date.getSeconds());
+      const millis = pad(date.getMilliseconds(), 3);
+      const expected = `[${month}-${day}-${year} ${hours}:${minutes}:${seconds}.${millis}]`;
+
+      expect(cmd?.timestamp).toBe(expected);
     });
   });
 
