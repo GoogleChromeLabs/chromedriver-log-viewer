@@ -1,0 +1,47 @@
+/**
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  color: #666;
+  outline: none;
+  transition:
+    border 0.2s ease-in-out,
+    background-color 0.2s;
+  cursor: pointer;
+  height: 300px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dropzone.active {
+  border-color: #2196f3;
+  background-color: #e3f2fd;
+  color: #2196f3;
+}
+
+.dropzone .icon {
+  margin-bottom: 16px;
+  color: inherit;
+}
