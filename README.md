@@ -2,6 +2,9 @@
 
 A web-based viewer built to make sense of Automation logs such as [ChromeDriver](https://chromedriver.chromium.org/). This tool helps developers visualize, filter, and debug the communication between ChromeDriver and the browser.
 
+![driver](https://github.com/user-attachments/assets/7702232e-932b-4e56-aee9-5d3d8821a1a4)
+
+
 ## Features
 
 - **High Performance**: Built to handle large log files smoothly.
