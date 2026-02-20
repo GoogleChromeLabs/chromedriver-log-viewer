@@ -2,8 +2,7 @@
 
 A web-based viewer built to make sense of Automation logs such as [ChromeDriver](https://chromedriver.chromium.org/). This tool helps developers visualize, filter, and debug the communication between ChromeDriver and the browser.
 
-![driver](https://github.com/user-attachments/assets/7702232e-932b-4e56-aee9-5d3d8821a1a4)
-
+![](https://github.com/user-attachments/assets/7702232e-932b-4e56-aee9-5d3d8821a1a4)
 
 ## Features
 
@@ -15,6 +14,15 @@ A web-based viewer built to make sense of Automation logs such as [ChromeDriver]
 - **Filtering**: Filter logs by text.
 - **Sticky Contexts**: Keeps the current log context visible as you scroll.
 - **Drag & Drop**: Simply drop your `.log`, `.txt`, or protocol `.json` files to view them.
+
+## Supported log formats
+
+The log viewer supports the following log formats:
+
+- [ChromeDriver verbose log](https://developer.chrome.com/docs/chromedriver/logging)
+- [Puppeteer debug log](https://pptr.dev/guides/debugging#log-devtools-protocol-traffic)
+- [Chrome DevTools protocol monitor JSON](https://developer.chrome.com/docs/devtools/protocol-monitor)
+- [Blink inspector protocol test stderr logs](https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/web_tests/inspector-protocol/)
 
 ## Use
 
