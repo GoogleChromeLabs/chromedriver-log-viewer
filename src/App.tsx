@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { DropZone } from './components/DropZone';
 import { LogViewer, type LogViewerHandle } from './components/LogViewer';
 import { FilterBar } from './components/FilterBar';
@@ -32,7 +32,7 @@ function App() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const logViewerRef = useRef<LogViewerHandle>(null);
 
-  const handleFileLoaded = async (content: string, name: string) => {
+  const handleFileLoaded = useCallback(async (content: string, name: string) => {
     setIsParsing(true);
     setFileName(name);
 
@@ -44,7 +44,28 @@ function App() {
       setSelectedId(null);
       setIsParsing(false);
     }, 100);
-  };
+  }, []);
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      if (logs.length > 0) {
+        return;
+      }
+
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      const pastedText = e.clipboardData?.getData('text');
+      if (pastedText && pastedText.trim().length > 0) {
+        handleFileLoaded(pastedText, 'Pasted Log');
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, [handleFileLoaded, logs.length]);
 
   // Filter logs purely based on current state (Derived State)
   const filteredLogs = useMemo(() => {
