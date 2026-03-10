@@ -55,8 +55,12 @@ export const DropZone: React.FC<DropZoneProps> = ({ onFileLoaded }) => {
       {isDragActive ? (
         <p>Drop the file here ...</p>
       ) : (
-        <p>
-          Drag 'n' drop a ChromeDriver log file here, paste from clipboard, or click to select file
+        <p className="text-center">
+          Drag 'n' drop a ChromeDriver log file here,
+          <br />
+          paste from clipboard,
+          <br />
+          or click to select file
         </p>
       )}
     </div>
