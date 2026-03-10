@@ -58,7 +58,7 @@ export const DropZone: React.FC<DropZoneProps> = ({ onFileLoaded }) => {
         <p className="text-center">
           Drag 'n' drop a ChromeDriver log file here,
           <br />
-          paste from clipboard,
+          paste text or URL from clipboard,
           <br />
           or click to select file
         </p>

@@ -92,3 +92,14 @@ body,
   font-size: 18px;
   color: #555;
 }
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 18px;
+  color: #d32f2f;
+  padding: 20px;
+  text-align: center;
+}

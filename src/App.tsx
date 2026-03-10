@@ -27,6 +27,7 @@ function App() {
   const [isParsing, setIsParsing] = useState(false);
   const [fileName, setFileName] = useState<string>('');
   const [filterText, setFilterText] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   // Selection and View state
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -59,7 +60,36 @@ function App() {
 
       const pastedText = e.clipboardData?.getData('text');
       if (pastedText && pastedText.trim().length > 0) {
-        handleFileLoaded(pastedText, 'Pasted Log');
+        const trimmed = pastedText.trim();
+        let isUrl = false;
+        try {
+          const url = new URL(trimmed);
+          isUrl = url.protocol === 'https:';
+        } catch {
+          // Not a URL
+        }
+
+        if (isUrl) {
+          setIsParsing(true);
+          setError(null);
+          setFileName(`Downloading ${trimmed}...`);
+          fetch(trimmed)
+            .then((res) => {
+              if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+              return res.text();
+            })
+            .then((text) => {
+              handleFileLoaded(text, trimmed);
+            })
+            .catch((err) => {
+              console.error('Failed to fetch URL:', err);
+              setIsParsing(false);
+              setFileName('');
+              setError(`Failed to fetch logs from URL:\n${err.message}`);
+            });
+        } else {
+          handleFileLoaded(trimmed, 'Pasted Log');
+        }
       }
     };
 
@@ -208,7 +238,7 @@ function App() {
             Viewing: {fileName} ({filteredLogs.length} visible)
           </span>
         )}
-        {logs.length > 0 && (
+        {(logs.length > 0 || error) && (
           <button
             className="reset-btn"
             onClick={() => {
@@ -216,6 +246,7 @@ function App() {
               setFileName('');
               setFilterText('');
               setSelectedId(null);
+              setError(null);
             }}
           >
             Open Different File
@@ -226,7 +257,13 @@ function App() {
       <main className="app-main">
         {isParsing && <div className="parsing-indicator">Parsing logs... please wait.</div>}
 
-        {!isParsing && logs.length === 0 && (
+        {error && !isParsing && (
+          <div className="error-message">
+            <span style={{ whiteSpace: 'pre-wrap' }}>{error}</span>
+          </div>
+        )}
+
+        {!isParsing && !error && logs.length === 0 && (
           <div className="upload-section">
             <DropZone onFileLoaded={handleFileLoaded} />
           </div>
