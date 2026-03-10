@@ -55,7 +55,7 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
         }}
       >
-        {entries.map((entry) => (
+        {entries.slice(-10).map((entry) => (
           <div key={entry.id} style={{ pointerEvents: 'auto' }}>
             <LogRow
               entry={entry}

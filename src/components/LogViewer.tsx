@@ -191,6 +191,11 @@ export const LogViewer = forwardRef<LogViewerHandle, LogViewerProps>(
           }}
           style={{ flex: 1 }}
           data={logs}
+          components={{
+            Footer: () => (
+              <div style={{ height: '40px', width: '100%' }} className="dummy-last-element" />
+            ),
+          }}
           rangeChanged={handleRangeChanged}
           itemContent={(index, entry) => (
             <div data-index={index} style={{ width: '100%' }}>
