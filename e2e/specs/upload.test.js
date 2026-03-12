@@ -50,4 +50,30 @@ describe('Log Viewer - Upload & Rendering', () => {
     const rows = await env.page.$$('.log-row');
     expect(rows.length).toBeGreaterThan(0);
   });
+  it('should upload a log file via paste', async () => {
+    // Reload to clear previous state
+    await env.page.goto(env.url);
+    
+    // Wait for the app to be ready and React to attach the effect listener
+    await env.page.waitForSelector('.upload-section');
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Simulate a paste event using generic Event and Object.defineProperty
+    await env.page.evaluate(() => {
+      const pasteEvent = new Event('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(pasteEvent, 'clipboardData', {
+        value: {
+          getData: (type) => '[02-03-2026 12:53:09.630196][INFO]: ChromeDriver ready\n[02-03-2026 12:53:09.630298][DEBUG]: Some debug log'
+        }
+      });
+      document.body.dispatchEvent(pasteEvent);
+    });
+
+    // Wait for at least one log row to appear
+    await env.page.waitForSelector('.log-row', { timeout: 5000 });
+    
+    // Verify content is rendered
+    const rows = await env.page.$$('.log-row');
+    expect(rows.length).toBeGreaterThan(0);
+  });
 });

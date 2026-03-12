@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { DropZone } from './components/DropZone';
 import { LogViewer, type LogViewerHandle } from './components/LogViewer';
 import { FilterBar } from './components/FilterBar';
@@ -27,12 +27,13 @@ function App() {
   const [isParsing, setIsParsing] = useState(false);
   const [fileName, setFileName] = useState<string>('');
   const [filterText, setFilterText] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   // Selection and View state
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const logViewerRef = useRef<LogViewerHandle>(null);
 
-  const handleFileLoaded = async (content: string, name: string) => {
+  const handleFileLoaded = useCallback(async (content: string, name: string) => {
     setIsParsing(true);
     setFileName(name);
 
@@ -44,7 +45,57 @@ function App() {
       setSelectedId(null);
       setIsParsing(false);
     }, 100);
-  };
+  }, []);
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      if (logs.length > 0) {
+        return;
+      }
+
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      const pastedText = e.clipboardData?.getData('text');
+      if (pastedText && pastedText.trim().length > 0) {
+        const trimmed = pastedText.trim();
+        let isUrl = false;
+        try {
+          const url = new URL(trimmed);
+          isUrl = url.protocol === 'https:';
+        } catch {
+          // Not a URL
+        }
+
+        if (isUrl) {
+          setIsParsing(true);
+          setError(null);
+          setFileName(`Downloading ${trimmed}...`);
+          fetch(trimmed)
+            .then((res) => {
+              if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+              return res.text();
+            })
+            .then((text) => {
+              handleFileLoaded(text, trimmed);
+            })
+            .catch((err) => {
+              console.error('Failed to fetch URL:', err);
+              setIsParsing(false);
+              setFileName('');
+              setError(`Failed to fetch logs from URL:\n${err.message}`);
+            });
+        } else {
+          handleFileLoaded(trimmed, 'Pasted Log');
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, [handleFileLoaded, logs.length]);
 
   // Filter logs purely based on current state (Derived State)
   const filteredLogs = useMemo(() => {
@@ -187,7 +238,7 @@ function App() {
             Viewing: {fileName} ({filteredLogs.length} visible)
           </span>
         )}
-        {logs.length > 0 && (
+        {(logs.length > 0 || error) && (
           <button
             className="reset-btn"
             onClick={() => {
@@ -195,6 +246,7 @@ function App() {
               setFileName('');
               setFilterText('');
               setSelectedId(null);
+              setError(null);
             }}
           >
             Open Different File
@@ -205,7 +257,13 @@ function App() {
       <main className="app-main">
         {isParsing && <div className="parsing-indicator">Parsing logs... please wait.</div>}
 
-        {!isParsing && logs.length === 0 && (
+        {error && !isParsing && (
+          <div className="error-message">
+            <span style={{ whiteSpace: 'pre-wrap' }}>{error}</span>
+          </div>
+        )}
+
+        {!isParsing && !error && logs.length === 0 && (
           <div className="upload-section">
             <DropZone onFileLoaded={handleFileLoaded} />
           </div>
