@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { LogRow } from './LogRow';
 import type { LogEntry } from '../utils/logParser';
 
@@ -41,7 +41,63 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
     },
     ref,
   ) => {
+    const [isExpandedAll, setIsExpandedAll] = useState(false);
+
     if (entries.length === 0) return null;
+
+    const renderEntry = (entry: LogEntry) => (
+      <div key={entry.id} style={{ pointerEvents: 'auto' }}>
+        <LogRow
+          entry={entry}
+          style={{
+            backgroundColor: '#fffbeb',
+            borderBottom: '1px solid #ddd',
+          }}
+          onToggleExpand={() => {
+            onToggleExpand(entry.id);
+          }}
+          isExpanded={expandedIds.has(entry.id)}
+          onToggleRaw={onToggleRaw}
+          isRawExpanded={rawViewExpandedIds.has(entry.id)}
+          highlightedCorrelationId={hoveredCorrelationId}
+          onHoverCorrelation={onHoverCorrelation}
+        />
+      </div>
+    );
+
+    let content;
+    if (entries.length <= 10 || isExpandedAll) {
+      content = entries.map(renderEntry);
+    } else {
+      const topEntries = entries.slice(0, 2);
+      const bottomEntries = entries.slice(-8);
+      const hiddenCount = entries.length - 10;
+
+      content = (
+        <>
+          {topEntries.map(renderEntry)}
+          <div
+            style={{
+              pointerEvents: 'auto',
+              padding: '6px 12px',
+              backgroundColor: '#f3f4f6',
+              borderBottom: '1px solid #ddd',
+              textAlign: 'center',
+              fontSize: '0.85em',
+              color: '#4b5563',
+              cursor: 'pointer',
+              userSelect: 'none',
+              fontWeight: 500,
+            }}
+            onClick={() => setIsExpandedAll(true)}
+            title="Click to expand all collapsed commands"
+          >
+            ... {hiddenCount} commands hidden ...
+          </div>
+          {bottomEntries.map(renderEntry)}
+        </>
+      );
+    }
 
     return (
       <div
@@ -53,27 +109,38 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
           backgroundColor: 'white',
           borderBottom: '1px solid #ddd',
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          ...(isExpandedAll && entries.length > 10
+            ? {
+                maxHeight: '40vh',
+                overflowY: 'auto',
+              }
+            : {}),
         }}
       >
-        {entries.map((entry) => (
-          <div key={entry.id} style={{ pointerEvents: 'auto' }}>
-            <LogRow
-              entry={entry}
-              style={{
-                backgroundColor: '#fffbeb',
-                borderBottom: '1px solid #ddd',
-              }}
-              onToggleExpand={() => {
-                onToggleExpand(entry.id);
-              }}
-              isExpanded={expandedIds.has(entry.id)}
-              onToggleRaw={onToggleRaw}
-              isRawExpanded={rawViewExpandedIds.has(entry.id)}
-              highlightedCorrelationId={hoveredCorrelationId}
-              onHoverCorrelation={onHoverCorrelation}
-            />
+        {isExpandedAll && entries.length > 10 && (
+          <div
+            style={{
+              pointerEvents: 'auto',
+              padding: '6px 12px',
+              backgroundColor: '#e5e7eb',
+              borderBottom: '1px solid #ddd',
+              textAlign: 'center',
+              fontSize: '0.85em',
+              color: '#374151',
+              cursor: 'pointer',
+              position: 'sticky',
+              top: 0,
+              zIndex: 11,
+              fontWeight: 500,
+              userSelect: 'none',
+              boxShadow: '0 2px 4px -1px rgba(0,0,0,0.05)',
+            }}
+            onClick={() => setIsExpandedAll(false)}
+          >
+            Collapse Stack ↑
           </div>
-        ))}
+        )}
+        {content}
       </div>
     );
   },
