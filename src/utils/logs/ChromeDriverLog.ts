@@ -21,10 +21,11 @@ export class ChromeDriverLog extends GenericLog {
   parse(content: string): LogEntry[] {
     const lines = content.split('\n');
     const entries: LogEntry[] = [];
-    const timestampRegex = /^\[(\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}\.\d{6})\]\[(\w+)\]: (.+)$/;
+    const timestampRegex =
+      /^\[(\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}\.\d{6}|\d+\.\d+)\]\[(\w+)\]: (.+)$/;
 
     // Accumulate lines for a single entry
-    let currentEntry: Partial<LogEntry> & { rawLines: string[] } | null = null;
+    let currentEntry: (Partial<LogEntry> & { rawLines: string[] }) | null = null;
     let entryCounter = 0;
 
     for (let i = 0; i < lines.length; i++) {
@@ -47,7 +48,7 @@ export class ChromeDriverLog extends GenericLog {
           // defaults
           isCommand: false,
           isResponse: false,
-          targetIds: []
+          targetIds: [],
         };
       } else {
         // Continuation of previous entry
@@ -68,43 +69,43 @@ export class ChromeDriverLog extends GenericLog {
   private finalizeEntry(entry: Partial<LogEntry> & { rawLines: string[] }, id: number): LogEntry {
     // Combine lines 1..n to form the payload if any
     const fullRaw = entry.rawLines.join('\n');
-    
+
     // Try to extract JSON
     let payload: any = undefined;
-    
+
     // Heuristic: Find first '{' or '['
     let startJson = fullRaw.indexOf('{');
-    
+
     let bracketIdx = fullRaw.indexOf('[');
     while (bracketIdx !== -1) {
       const snippet = fullRaw.substring(bracketIdx, bracketIdx + 50);
       const isTimestamp = /^\d/.test(snippet.substring(1)); // [0...
       const isLevel = /^[A-Z]+\]/.test(snippet.substring(1)); // [INFO]
       const isTarget = /^[a-f0-9]{32}\]/.test(snippet.substring(1)); // [32chars]
-      
+
       if (isTimestamp || isLevel || isTarget) {
-         bracketIdx = fullRaw.indexOf('[', bracketIdx + 1);
+        bracketIdx = fullRaw.indexOf('[', bracketIdx + 1);
       } else {
-         break;
+        break;
       }
     }
-    
+
     const firstBracket = bracketIdx;
-    
+
     if (startJson !== -1 && firstBracket !== -1) {
       startJson = Math.min(startJson, firstBracket);
     } else if (startJson === -1) {
       startJson = firstBracket;
     }
-    
+
     if (startJson !== -1) {
       let potentialJson = fullRaw.substring(startJson);
       const lastBrace = potentialJson.lastIndexOf('}');
       const lastBracket = potentialJson.lastIndexOf(']');
       const lastEnd = Math.max(lastBrace, lastBracket);
-      
+
       if (lastEnd !== -1) {
-         potentialJson = potentialJson.substring(0, lastEnd + 1);
+        potentialJson = potentialJson.substring(0, lastEnd + 1);
       }
 
       try {
@@ -115,8 +116,8 @@ export class ChromeDriverLog extends GenericLog {
     }
 
     // Extract Metadata from message
-    const msg = entry.message || "";
-    
+    const msg = entry.message || '';
+
     const targetIdMatch = msg.match(/\[([a-f0-9]{32})\]/);
     const targetIds: string[] = [];
     if (targetIdMatch) {
@@ -142,23 +143,23 @@ export class ChromeDriverLog extends GenericLog {
     let method: string | undefined = undefined;
     let logType: LogType = 'Other';
 
-    if (msg.includes("DevTools WebSocket Command")) {
+    if (msg.includes('DevTools WebSocket Command')) {
       isCommand = true;
       logType = 'DevTools';
-    } else if (msg.includes("DevTools WebSocket Response")) {
+    } else if (msg.includes('DevTools WebSocket Response')) {
       isResponse = true;
       logType = 'DevTools';
-    } else if (msg.includes("DevTools WebSocket Event")) {
+    } else if (msg.includes('DevTools WebSocket Event')) {
       logType = 'DevTools';
       // Event is neither command nor response in this context
     } else {
       // Check for WebDriver (allow substrings like "[id] COMMAND ...")
       const wdMatch = msg.match(/(?:^|\s)(COMMAND|RESPONSE)\s+([a-zA-Z0-9_.]+)/);
       if (wdMatch) {
-         if (wdMatch[1] === 'COMMAND') isCommand = true;
-         else isResponse = true;
-         logType = 'WebDriver';
-         method = wdMatch[2];
+        if (wdMatch[1] === 'COMMAND') isCommand = true;
+        else isResponse = true;
+        logType = 'WebDriver';
+        method = wdMatch[2];
       }
     }
 
@@ -172,11 +173,11 @@ export class ChromeDriverLog extends GenericLog {
     if (logType === 'DevTools') {
       const parts = msg.split(':');
       if (parts.length >= 2) {
-         const afterColon = parts[1].trim();
-         const methodMatch = afterColon.match(/^([\w.]+)/);
-         if (methodMatch) {
-           method = methodMatch[1];
-         }
+        const afterColon = parts[1].trim();
+        const methodMatch = afterColon.match(/^([\w.]+)/);
+        if (methodMatch) {
+          method = methodMatch[1];
+        }
       }
     }
 
@@ -185,7 +186,7 @@ export class ChromeDriverLog extends GenericLog {
       lineNumber: entry.lineNumber!,
       timestamp: entry.timestamp!,
       level: entry.level!,
-      message: msg, 
+      message: msg,
       raw: fullRaw,
       payload,
       tags: Array.from(new Set([...targetIds, ...sessionIds])),
@@ -195,7 +196,7 @@ export class ChromeDriverLog extends GenericLog {
       isResponse,
       commandId,
       method,
-      logType
+      logType,
     };
   }
 
@@ -215,5 +216,4 @@ export class ChromeDriverLog extends GenericLog {
       }
     }
   }
-
 }

@@ -179,6 +179,17 @@ describe('LogParser', () => {
       expect(entries[2].isResponse).toBe(true);
     });
 
+    it('should parse ChromeDriver logs with numeric timestamps', () => {
+      const log = `[1234567890.123][INFO]: Starting ChromeDriver
+[1234567890.124][DEBUG]: DevTools WebSocket Command: Method: Target.createTarget (id=1)
+[1234567890.125][DEBUG]: DevTools WebSocket Response: Method: Target.createTarget (id=1) { "result": { "targetId": "123" } }`;
+
+      const entries = parseLogs(log);
+      expect(entries).toHaveLength(3);
+      expect(entries[1].isCommand).toBe(true);
+      expect(entries[2].isResponse).toBe(true);
+    });
+
     it('should extract tags from payload and message', () => {
       const log = `[01-01-2024 12:00:00.000000][INFO]: [abc12345abc12345abc12345abc12345] COMMAND Navigate { "url": "http://example.com" }
 [01-01-2024 12:00:00.010000][INFO]: (session_id=session123) Response { "status": 0 }
