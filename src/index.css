@@ -20,8 +20,69 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  /* Light Theme Variables (Default) */
+  --bg-base: #f5f5f5;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f0f0f0;
+  --bg-surface-hover: #fafafa;
+  --bg-surface-selected: #e3f2fd;
+  --bg-surface-highlighted: #e8f0fe;
+  --bg-header: #333333;
+
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #aaaaaa;
+  --text-inverse: #ffffff;
+
+  --border-color: #e0e0e0;
+  --border-dark: #cccccc;
+  --border-accent: #2196f3;
+
+  /* Tags */
+  --tag-wd-bg: #e0f7fa;
+  --tag-wd-text: #006064;
+  --tag-wd-border: #b2ebf2;
+
+  --tag-cdp-bg: #fff3e0;
+  --tag-cdp-text: #e65100;
+  --tag-cdp-border: #ffe0b2;
+
+  --tag-id-bg: #eeeeee;
+  --tag-id-text: #000000;
+  --tag-id-border: #e0e0e0;
+
+  --tag-empty-bg: #f5f5f5;
+  --tag-empty-text: #9e9e9e;
+  --tag-empty-border: #bdbdbd;
+
+  /* Arrows */
+  --arrow-cmd: #f44336;
+  --arrow-res: #4caf50;
+
+  /* Badges */
+  --badge-target-bg: #e0e0e0;
+  --badge-target-text: #333333;
+  --badge-session-bg: #e1bee7;
+  --badge-session-text: #4a148c;
+
+  /* Domains */
+  --method-name: #0d47a1;
+  --method-event: #000000;
+
+  /* Lanes */
+  --lane-bg: #fafafa;
+  --lane-line: #e0e0e0;
+  --lane-segment: #b0b0b0;
+  --lane-active: #4caf50;
+
+  /* Raw Viewer */
+  --raw-viewer-bg: #f5f5f5;
+  --raw-viewer-border: #e0e0e0;
+  --raw-viewer-text: #444444;
+
+  color: var(--text-primary);
+  background-color: var(--bg-base);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -70,15 +131,73 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Dark Theme Variables */
+    --bg-base: #121212;
+    --bg-surface: #1e1e1e;
+    --bg-surface-alt: #2c2c2c;
+    --bg-surface-hover: #2a2a2a;
+    --bg-surface-selected: #1a3a5a;
+    --bg-surface-highlighted: #2c4a70;
+    --bg-header: #000000;
+
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaaaaa;
+    --text-muted: #666666;
+    --text-inverse: #121212;
+
+    --border-color: #444444;
+    --border-dark: #cc5555; /* Note: kept original logic where border-dark is darker border */
+    --border-dark: #666666;
+    --border-accent: #64b5f6;
+
+    /* Tags */
+    --tag-wd-bg: #004d40;
+    --tag-wd-text: #b2dfdb;
+    --tag-wd-border: #00695c;
+
+    --tag-cdp-bg: #6a2a00;
+    --tag-cdp-text: #ffcc80;
+    --tag-cdp-border: #ef6c00;
+
+    --tag-id-bg: #424242;
+    --tag-id-text: #e0e0e0;
+    --tag-id-border: #616161;
+
+    --tag-empty-bg: #212121;
+    --tag-empty-text: #9e9e9e;
+    --tag-empty-border: #424242;
+
+    /* Arrows */
+    --arrow-cmd: #ef5350;
+    --arrow-res: #66bb6a;
+
+    /* Badges */
+    --badge-target-bg: #616161;
+    --badge-target-text: #e0e0e0;
+    --badge-session-bg: #4a148c;
+    --badge-session-text: #e1bee7;
+
+    /* Domains */
+    --method-name: #64b5f6;
+    --method-event: #eeeeee;
+
+    /* Lanes */
+    --lane-bg: #2a2a2a;
+    --lane-line: #444444;
+    --lane-segment: #666666;
+    --lane-active: #66bb6a;
+
+    /* Raw Viewer */
+    --raw-viewer-bg: #1a1a1a;
+    --raw-viewer-border: #333333;
+    --raw-viewer-text: #dddddd;
   }
   a:hover {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #333333;
   }
 }

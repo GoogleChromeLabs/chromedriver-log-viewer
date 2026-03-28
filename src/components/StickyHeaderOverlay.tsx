@@ -50,8 +50,8 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
         <LogRow
           entry={entry}
           style={{
-            backgroundColor: '#fffbeb',
-            borderBottom: '1px solid #ddd',
+            backgroundColor: 'var(--bg-surface-highlighted)',
+            borderBottom: '1px solid var(--border-color)',
           }}
           onToggleExpand={() => {
             onToggleExpand(entry.id);
@@ -80,11 +80,11 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
             style={{
               pointerEvents: 'auto',
               padding: '6px 12px',
-              backgroundColor: '#f3f4f6',
-              borderBottom: '1px solid #ddd',
+              backgroundColor: 'var(--bg-surface-alt)',
+              borderBottom: '1px solid var(--border-color)',
               textAlign: 'center',
               fontSize: '0.85em',
-              color: '#4b5563',
+              color: 'var(--text-secondary)',
               cursor: 'pointer',
               userSelect: 'none',
               fontWeight: 500,
@@ -106,8 +106,8 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
         style={{
           zIndex: 10,
           width: '100%',
-          backgroundColor: 'white',
-          borderBottom: '1px solid #ddd',
+          backgroundColor: 'var(--bg-surface)',
+          borderBottom: '1px solid var(--border-color)',
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
           ...(isExpandedAll && entries.length > 10
             ? {
@@ -122,11 +122,11 @@ export const StickyHeaderOverlay = React.forwardRef<HTMLDivElement, StickyHeader
             style={{
               pointerEvents: 'auto',
               padding: '6px 12px',
-              backgroundColor: '#e5e7eb',
-              borderBottom: '1px solid #ddd',
+              backgroundColor: 'var(--bg-surface-hover)',
+              borderBottom: '1px solid var(--border-color)',
               textAlign: 'center',
               fontSize: '0.85em',
-              color: '#374151',
+              color: 'var(--text-primary)',
               cursor: 'pointer',
               position: 'sticky',
               top: 0,

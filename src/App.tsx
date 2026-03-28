@@ -234,7 +234,10 @@ function App() {
       <header className="app-header">
         <h1>ChromeDriver Log Viewer</h1>
         {fileName && (
-          <span className="filename">
+          <span
+            className="filename"
+            title={`Viewing: ${fileName} (${filteredLogs.length} visible)`}
+          >
             Viewing: {fileName} ({filteredLogs.length} visible)
           </span>
         )}
