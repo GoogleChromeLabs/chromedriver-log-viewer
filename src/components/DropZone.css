@@ -20,10 +20,10 @@
   align-items: center;
   justify-content: center;
   padding: 40px;
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--border-dark);
   border-radius: 12px;
-  background-color: #f8f9fa;
-  color: #666;
+  background-color: var(--bg-surface-alt);
+  color: var(--text-secondary);
   outline: none;
   transition:
     border 0.2s ease-in-out,
@@ -36,9 +36,9 @@
 }
 
 .dropzone.active {
-  border-color: #2196f3;
-  background-color: #e3f2fd;
-  color: #2196f3;
+  border-color: var(--border-accent);
+  background-color: var(--bg-surface-selected);
+  color: var(--border-accent);
 }
 
 .dropzone .icon {

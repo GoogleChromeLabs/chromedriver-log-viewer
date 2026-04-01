@@ -19,7 +19,7 @@
   min-height: 0;
   width: 100%;
   position: relative;
-  background: white;
+  background: var(--bg-surface);
   display: flex;
   flex-direction: column;
 }

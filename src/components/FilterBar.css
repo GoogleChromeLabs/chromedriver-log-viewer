@@ -16,8 +16,8 @@
 
 .filter-bar {
   padding: 8px 16px;
-  background: #f0f0f0;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--bg-surface-alt);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -26,18 +26,20 @@
 .filter-input {
   flex: 1;
   padding: 6px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-dark);
   border-radius: 4px;
   font-size: 13px;
   outline: none;
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 .filter-input:focus {
-  border-color: #666;
+  border-color: var(--border-accent);
 }
 
 .filter-stats {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
