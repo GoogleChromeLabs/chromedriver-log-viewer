@@ -32,7 +32,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -45,8 +45,8 @@
     "puppeteer": "^24.37.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4",
-    "vitest": "^4.0.18"
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
